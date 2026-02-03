@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin - XModel</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-b from-gray-900 to-gray-800 text-white min-h-screen">
+  <header class="bg-gray-800/90 p-4">
+    <div class="max-w-6xl mx-auto flex justify-between">
+      <h1 class="text-2xl font-bold">Panel Admin</h1>
+      <a href="/admin/logout" class="text-red-400 hover:underline">Cerrar sesión</a>
+    </div>
+  </header>
+  <main class="max-w-6xl mx-auto p-8">
+    {% if mensaje %}
+      <p class="bg-green-800/50 p-4 rounded mb-6 text-center">{{ mensaje }}</p>
+    {% endif %}
+
+    <h2 class="text-2xl font-bold mb-4">Agregar servicio</h2>
+    <form method="post" enctype="multipart/form-data" class="bg-gray-800 p-6 rounded-lg mb-10">
+      <input type="hidden" name="add" value="1">
+      <div class="mb-4">
+        <label class="block mb-1">Nombre</label>
+        <input name="name" required class="w-full p-2 bg-gray-700 rounded border border-gray-600">
+      </div>
+      <div class="mb-4">
+        <label class="block mb-1">Descripción</label>
+        <textarea name="description" rows="4" class="w-full p-2 bg-gray-700 rounded border border-gray-600"></textarea>
+      </div>
+      <div class="mb-4">
+        <label class="block mb-1">Precio (USD)</label>
+        <input name="price" type="number" step="0.01" required class="w-full p-2 bg-gray-700 rounded border border-gray-600">
+      </div>
+      <div class="mb-6">
+        <label class="block mb-1">Imagen (opcional)</label>
+        <input type="file" name="image_file" accept="image/*" class="w-full p-2 bg-gray-700 rounded border border-gray-600">
+      </div>
+      <button type="submit" class="bg-green-600 hover:bg-green-700 px-6 py-3 rounded font-bold">
+        Subir servicio
+      </button>
+    </form>
+
+    <h2 class="text-2xl font-bold mb-4">Servicios publicados ({{ services|length }})</h2>
+    {% if services %}
+      <div class="space-y-4">
+        {% for s in services %}
+          <div class="bg-gray-800 p-4 rounded flex justify-between items-center">
+            <div>
+              <strong>{{ s['name'] }}</strong> — ${{ s['price'] }}
+            </div>
+            <form method="post">
+              <input type="hidden" name="delete_id" value="{{ s['id'] }}">
+              <button type="submit" class="bg-red-700 hover:bg-red-800 px-4 py-2 rounded text-sm">
+                Eliminar
+              </button>
+            </form>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="text-gray-400">No hay servicios aún.</p>
+    {% endif %}
+
+  </main>
+</body>
+</html>
